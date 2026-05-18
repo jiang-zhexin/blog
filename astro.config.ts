@@ -68,6 +68,24 @@ export default defineConfig({
       styles: ["normal", "italic"],
       formats: ["woff", "ttf"],
     },
+    {
+      name: "Noto Sans SC",
+      cssVariable: "--font-noto-sans-sc",
+      provider: fontProviders.google(),
+      fallbacks: ["monospace"],
+      weights: [400, 700],
+      styles: ["normal", "italic"],
+      formats: ["woff", "ttf"],
+    },
+    {
+      name: "Noto Emoji",
+      cssVariable: "--font-noto-emoji",
+      provider: fontProviders.google(),
+      fallbacks: ["monospace"],
+      weights: [400],
+      styles: ["normal", "italic"],
+      formats: ["woff", "ttf"],
+    },
   ],
   env: {
     schema: {

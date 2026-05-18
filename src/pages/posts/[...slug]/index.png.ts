@@ -27,19 +27,29 @@ export const GET: APIRoute = async ({ props, url }) => {
     return new Response(null, { status: 404, statusText: "Not found" });
   }
 
-  const fonts = fontData["--font-google-sans-code"];
+  const fonts = fontData["--font-noto-sans-sc"];
   const regularFontPath = getFontPathByWeight(fonts, 400);
   const boldFontPath = getFontPathByWeight(fonts, 700);
 
-  if (regularFontPath === undefined || boldFontPath === undefined) {
+  const emojiFonts = fontData["--font-noto-emoji"];
+  const emojiFontPath = getFontPathByWeight(emojiFonts, 400);
+
+  if (
+    regularFontPath === undefined ||
+    boldFontPath === undefined ||
+    emojiFontPath === undefined
+  ) {
     throw new Error("Cannot find the font path.");
   }
 
-  const [regularData, boldData] = await Promise.all([
+  const [regularData, boldData, emojiData] = await Promise.all([
     fetch(experimental_getFontFileURL(regularFontPath, url)).then(res =>
       res.arrayBuffer()
     ),
     fetch(experimental_getFontFileURL(boldFontPath, url)).then(res =>
+      res.arrayBuffer()
+    ),
+    fetch(experimental_getFontFileURL(emojiFontPath, url)).then(res =>
       res.arrayBuffer()
     ),
   ]);
@@ -114,6 +124,18 @@ export const GET: APIRoute = async ({ props, url }) => {
                       },
                     },
                     {
+                      type: "p",
+                      props: {
+                        style: {
+                          fontSize: 48,
+                          fontWeight: "bold",
+                          maxHeight: "84%",
+                          overflow: "hidden",
+                        },
+                        children: props.data.description,
+                      },
+                    },
+                    {
                       type: "div",
                       props: {
                         style: {
@@ -173,15 +195,21 @@ export const GET: APIRoute = async ({ props, url }) => {
       embedFont: true,
       fonts: [
         {
-          name: "Google Sans Code",
+          name: "Noto Sans SC",
           data: regularData,
           weight: 400,
           style: "normal",
         },
         {
-          name: "Google Sans Code",
+          name: "Noto Sans SC",
           data: boldData,
           weight: 700,
+          style: "normal",
+        },
+        {
+          name: "Noto Emoji",
+          data: emojiData,
+          weight: 400,
           style: "normal",
         },
       ],

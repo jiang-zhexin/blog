@@ -6,19 +6,29 @@ import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
 import config from "@/config";
 
 export const GET: APIRoute = async context => {
-  const fonts = fontData["--font-google-sans-code"];
+  const fonts = fontData["--font-noto-sans-sc"];
   const regularFontPath = getFontPathByWeight(fonts, 400);
   const boldFontPath = getFontPathByWeight(fonts, 700);
 
-  if (regularFontPath === undefined || boldFontPath === undefined) {
+  const emojiFonts = fontData["--font-noto-emoji"];
+  const emojiFontPath = getFontPathByWeight(emojiFonts, 400);
+
+  if (
+    regularFontPath === undefined ||
+    boldFontPath === undefined ||
+    emojiFontPath === undefined
+  ) {
     throw new Error("Cannot find the font path.");
   }
 
-  const [regularData, boldData] = await Promise.all([
+  const [regularData, boldData, emojiData] = await Promise.all([
     fetch(experimental_getFontFileURL(regularFontPath, context.url)).then(res =>
       res.arrayBuffer()
     ),
     fetch(experimental_getFontFileURL(boldFontPath, context.url)).then(res =>
+      res.arrayBuffer()
+    ),
+    fetch(experimental_getFontFileURL(emojiFontPath, context.url)).then(res =>
       res.arrayBuffer()
     ),
   ]);
@@ -34,7 +44,7 @@ export const GET: APIRoute = async context => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "Google Sans Code",
+          fontFamily: "Noto Sans SC",
         },
         children: [
           {
@@ -145,15 +155,21 @@ export const GET: APIRoute = async context => {
       embedFont: true,
       fonts: [
         {
-          name: "Google Sans Code",
+          name: "Noto Sans SC",
           data: regularData,
           weight: 400,
           style: "normal",
         },
         {
-          name: "Google Sans Code",
+          name: "Noto Sans SC",
           data: boldData,
           weight: 700,
+          style: "normal",
+        },
+        {
+          name: "Noto Emoji",
+          data: emojiData,
+          weight: 400,
           style: "normal",
         },
       ],
