@@ -1,0 +1,10 @@
+{
+  "$schema": "https://esm.sh/wrangler/config-schema.json",
+  "name": "zhexin",
+  "compatibility_date": "2026-08-04",
+  "workers_dev": false,
+  "assets": {
+    "directory": "dist",
+    "html_handling": "drop-trailing-slash",
+  },
+}
