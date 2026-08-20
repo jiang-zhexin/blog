@@ -5,16 +5,18 @@
   .app-prose {
     @apply prose;
 
+    .katex-display {
+      @apply text-foreground;
+    }
+
     h1,
     h2,
     h3,
     h4,
+    h5,
+    h6,
     th {
       @apply text-foreground mb-3;
-    }
-
-    h3 {
-      @apply italic;
     }
 
     p,
@@ -23,7 +25,8 @@
     ul,
     figcaption,
     table,
-    code {
+    code,
+    kbd {
       @apply text-foreground;
     }
 

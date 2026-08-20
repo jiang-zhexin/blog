@@ -8,6 +8,9 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { unified } from "@astrojs/markdown-remark";
+import rehypeKatex from "rehype-katex";
+import rehypeMermaid from "rehype-mermaid";
+import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import rehypeCallouts from "rehype-callouts";
@@ -24,7 +27,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: page =>
+      filter: (page) =>
         config.features?.showArchives !== false || !page.endsWith("/archives/"),
     }),
   ],
@@ -38,11 +41,17 @@ export default defineConfig({
   markdown: {
     processor: unified({
       remarkPlugins: [
+        remarkMath,
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
       ],
-      rehypePlugins: [rehypeCallouts],
+      rehypePlugins: [
+        rehypeCallouts,
+        rehypeKatex,
+        [rehypeMermaid, { strategy: "pre-mermaid" }],
+      ],
     }),
+    syntaxHighlight: { excludeLangs: ["mermaid"] },
     shikiConfig: {
       themes: { light: "min-light", dark: "night-owl" },
       defaultColor: false,
